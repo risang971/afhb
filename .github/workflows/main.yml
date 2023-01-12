@@ -28,6 +28,5 @@ jobs:
         user_agent=$(python3 -c 'from fake_useragent import UserAgent; print(UserAgent().random)')
         echo "User Agent: ${user_agent}"
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-        google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --user-agent="${user_agent}" --disable-dev-shm-usage ${{ inputs.url }}
-        sleep $(shuf -n 1 -e "5m" "10m" "15m" "20m" "25m" "30m" "35m" "40m" "45m" "50m" "55m" "60m")
+        timeout $(shuf -n 1 -e "5m" "10m" "15m" "20m" "25m" "30m" "40m" "50m" "60m") google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --user-agent="${user_agent}" --disable-dev-shm-usage ${{ inputs.url }}
         pkill chrome
