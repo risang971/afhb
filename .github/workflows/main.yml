@@ -22,7 +22,7 @@ jobs:
         DISPLAY: :99.0
         MOZ_HEADLESS: 1
       run: |
-        Xvfb :99 -screen 0 1280x1024 &
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         firefox --headless --no-remote --marionette --setDefaultBrowser --user-agent "$(python3 -c 'from fake_useragent import UserAgent; print(UserAgent().random)')" ${{ inputs.url }}
         sleep $(shuf -n 1 -e "5m" "10m" "15m" "20m" "25m" "30m" "35m" "40m" "45m" "50m" "55m" "60m")
         pkill firefox
