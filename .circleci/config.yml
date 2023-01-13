@@ -2,8 +2,9 @@ version: 2.1
 jobs:
   visit-website:
     parallelism: 10
-    docker:
-      - image: circleci/python:3.8
+    executor:
+      name: machine
+      image: ubuntu-latest
     steps:
     - run:
         name: Install Chrome
@@ -16,7 +17,7 @@ jobs:
         name: Install dependencies
         command: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip xvfb tzdata
+          sudo apt-get install -y python3-pip xvfb
           pip3 install fake_useragent
     - run:
         name: Use Chrome to visit website
