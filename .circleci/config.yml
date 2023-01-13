@@ -7,17 +7,10 @@ jobs:
       image: ubuntu-latest
     steps:
     - run:
-        name: Install Chrome
-        command: |
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb
-          sudo apt-get install -f
-          rm google-chrome-stable_current_amd64.deb
-    - run:
         name: Install dependencies
         command: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip xvfb
+          sudo apt-get install -y python3-pip google-chrome-stable xvfb tzdata
           pip3 install fake_useragent
     - run:
         name: Use Chrome to visit website
