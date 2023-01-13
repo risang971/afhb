@@ -1,8 +1,10 @@
 version: 2.1
 jobs:
-  build:
-    docker:
-      - image: circleci/python:3.8
+  visit-website:
+    parallelism: 10
+    executor:
+      name: machine
+      image: ubuntu-latest
     steps:
     - run:
         name: Install Chrome
