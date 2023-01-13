@@ -1,15 +1,22 @@
 version: 2.1
 jobs:
-  build:
+  visit-website:
+    parallelism: 5
     docker:
       - image: circleci/python:3.8
     steps:
-    - checkout
+    - run:
+        name: Install Chrome
+        command: |
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb
+          sudo apt-get install -f
+          rm google-chrome-stable_current_amd64.deb
     - run:
         name: Install dependencies
         command: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip google-chrome-stable xvfb tzdata
+          sudo apt-get install -y python3-pip xvfb tzdata
           pip3 install fake_useragent
     - run:
         name: Randomize time zone
@@ -22,7 +29,7 @@ jobs:
           user_agent=$(python3 -c 'from fake_useragent import UserAgent; print(UserAgent().random)')
           echo "User Agent: ${user_agent}"
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --user-agent="${user_agent}" --disable-dev-shm-usage jewswb.mooo.com
+          google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --user-agent="${user_agent}" --disable-dev-shm-usage http://jewswb.mooo.com
           chrome_pid=$!
           sleep $(shuf -n 1 -e "5m" "10m" "15m" "20m" "25m" "30m" "40m" "50m" "60m")
           kill -s TERM "$chrome_pid"
