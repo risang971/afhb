@@ -1,0 +1,28 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+    - checkout
+    - run:
+        name: Install dependencies
+        command: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip google-chrome-stable xvfb tzdata
+          pip3 install fake_useragent
+    - run:
+        name: Randomize time zone
+        command: |
+          sudo sh -c 'echo $(tzselect) > /etc/timezone'
+          sudo dpkg-reconfigure -f noninteractive tzdata
+    - run:
+        name: Use Chrome to visit website
+        command: |
+          user_agent=$(python3 -c 'from fake_useragent import UserAgent; print(UserAgent().random)')
+          echo "User Agent: ${user_agent}"
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --user-agent="${user_agent}" --disable-dev-shm-usage jewswb.mooo.com
+          chrome_pid=$!
+          sleep $(shuf -n 1 -e "5m" "10m" "15m" "20m" "25m" "30m" "40m" "50m" "60m")
+          kill -s TERM "$chrome_pid"
