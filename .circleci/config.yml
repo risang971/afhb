@@ -1,7 +1,7 @@
 version: 2.1
 jobs:
   visit-website:
-    parallelism: 5
+    parallelism: 10
     docker:
       - image: circleci/python:3.8
     steps:
